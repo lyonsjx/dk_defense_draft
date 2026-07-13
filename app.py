@@ -44,7 +44,7 @@ def run_simulation(
         selected = rng.sample(forwards, defense_slots)
         pick_counter.update(selected)
 
-    tonight_pick = rng.sample(forwards, defense_slots)
+    tie_breakers = {name: rng.random() for name in forwards}
     rows = [
         {
             "Forward": name,
@@ -54,7 +54,13 @@ def run_simulation(
         for name in forwards
     ]
 
-    rows.sort(key=lambda row: (-float(row["Pick probability"]), str(row["Forward"])))
+    rows.sort(
+        key=lambda row: (
+            -int(row["Times picked"]),
+            tie_breakers[str(row["Forward"])],
+        )
+    )
+    tonight_pick = [str(row["Forward"]) for row in rows[:defense_slots]]
     return SimulationResult(rows=rows, tonight_pick=tonight_pick)
 
 
@@ -160,9 +166,9 @@ with col_pick:
     st.metric("Forwards in the hat", len(inputs["forwards"]))
 
     if inputs["seed"] is not None:
-        st.info(f"Repeatable draw using seed {inputs['seed']}.")
+        st.info(f"Top Monte Carlo result using seed {inputs['seed']}. Ties are randomized.")
     else:
-        st.info("Fresh random draw. Blame the algorithm, not the captain.")
+        st.info("Top Monte Carlo result. Ties are broken randomly.")
 
 with col_stats:
     st.subheader("Monte Carlo Results")
@@ -186,5 +192,5 @@ st.bar_chart(chart_df, x="Forward", y="Pick probability", use_container_width=Tr
 
 st.caption(
     f"Simulated {inputs['runs']:,} random lineups. "
-    "Every forward has equal odds in each run; the chart shows simulated selection rate."
+    "The assignment goes to the forward or forwards picked most often."
 )
