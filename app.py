@@ -100,7 +100,7 @@ with setup_controls_col:
         "Defense spots to fill",
         min_value=1,
         max_value=max_slots,
-        value=min(2, max_slots),
+        value=1,
         step=1,
     )
     runs = st.slider(
