@@ -113,6 +113,7 @@ with setup_controls_col:
     use_seed = st.checkbox("Use repeatable seed", value=False)
     seed = st.number_input("Seed", value=47, step=1, disabled=not use_seed)
     run_button = st.button("Run the draft", type="primary", use_container_width=True)
+    clear_button = st.button("Clear result", use_container_width=True)
 
 st.divider()
 
@@ -137,7 +138,11 @@ current_inputs = {
     "seed": int(seed) if use_seed else None,
 }
 
-if run_button or "last_result" not in st.session_state:
+if clear_button:
+    st.session_state.pop("last_result", None)
+    st.session_state.pop("last_inputs", None)
+
+if run_button:
     st.session_state.last_result = run_simulation(
         forwards=current_inputs["forwards"],
         defense_slots=current_inputs["defense_slots"],
@@ -145,6 +150,10 @@ if run_button or "last_result" not in st.session_state:
         seed=current_inputs["seed"],
     )
     st.session_state.last_inputs = current_inputs
+
+if "last_result" not in st.session_state:
+    st.info("No draft has been run yet. Confirm the setup above, then click Run the draft.")
+    st.stop()
 
 result: SimulationResult = st.session_state.last_result
 inputs = st.session_state.last_inputs
