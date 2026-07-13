@@ -9,13 +9,13 @@ import streamlit as st
 
 
 DEFAULT_FORWARDS = [
-    "Mitch",
-    "Ryan",
-    "Alex",
-    "Chris",
-    "Jordan",
-    "Pat",
-    "Sam",
+    "Steve",
+    "Budd",
+    "James",
+    "Warren",
+    "Evan",
+    "Zach",
+    "Wolfish",
 ]
 
 
@@ -69,7 +69,7 @@ st.set_page_config(
     layout="wide",
 )
 
-st.title("Beer League Defense Draft")
+st.title("Dead Kings Defense Draft")
 st.caption("A Monte Carlo excuse generator for deciding which forwards are moving back tonight.")
 
 st.subheader("Draft Setup")
